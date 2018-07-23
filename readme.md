@@ -1,5 +1,7 @@
 # Arconai Stream
 
+> Hosted [here](https://arconai-stream.herokuapp.com/).
+
 I was in bed recently, with an episode of Stargate streaming from an online service (arconai). I fell asleep with the stream open. At some point in the night, the stream crashed. I woke up at ~4am to a phone that was *roasting* hot.
 
 To continue my Stargate watching without worrying about setting my bed aflame, I tried saving the stream URL manually, but it changes periodically and I'm lazy.
@@ -25,7 +27,7 @@ Using an express server hosted on Heroku, the stream page is loaded and processe
 - Extracts all the `<script>` elements
 - Tags any scripts where the source or content includes `video`
 
-## [show-stream.js](express/show-stream.js)
+## [show-stream.js](src/show-stream.js)
 
 - It takes the tagged scripts from above and creates a HTML page with *just* enough HTML to give the video somewhere to load into
 - It then injects the original script references (the ones that contained 'video') into the header and body
