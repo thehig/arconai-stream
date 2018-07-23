@@ -1,17 +1,34 @@
-import axios from 'axios'
-import cheerio from 'cheerio'
+import axios from 'axios';
+import cheerio from 'cheerio';
 
 const fetch = url => axios.get(url)
-const extractData = response => response.data
+const extractData = response => {
+  // console.log(response.data);
+  return response.data
+};
 const loadCheerio = html => cheerio.load(html)
 
 const scrapeAllScripts = $ =>
-  $('script').map(function() {
-    // Don't use an arrow fn as it won't have 'this'
-    return this.children[0] && this.children[0].data
-      ? this.children[0].data
-      : undefined
-  })
+  $('script')
+    .map(function() {
+      const source = this.attribs['src']
+      const data =
+        this.children[0] && this.children[0].data
+          ? this.children[0].data
+          : undefined
+      
+      
+      
+      // Don't use an arrow fn as it won't have 'this'
+      return {
+        source,
+        data,
+
+        sourceContainsVideo: source && source.indexOf('video') >= 0,
+        dataContainsVideo: data && data.indexOf('video') >= 0,
+      }
+    })
+    .get()
 
 const inlineScriptToString = scripts =>
   scripts.map((index, value) => value).get()
@@ -22,14 +39,10 @@ const filterFor = desiredScriptContent => scripts =>
 const thereCanBeOnlyOne = scripts => {
   if (scripts && scripts.length === 1) return scripts[0]
   throw new Error('Invalid scripts')
-}
+};
 
 const cutStartingFrom = (startingFrom, trimLength = 0) => script =>
-  script
-    .substring(
-      script.indexOf(startingFrom),
-      script.length - trimLength
-    )
+  script.substring(script.indexOf(startingFrom), script.length - trimLength)
 
 const removeHiddenChars = input => input.replace(/\u200B/g, '').trim()
 
@@ -38,8 +51,9 @@ export default () =>
     .then(extractData)
     .then(loadCheerio)
     .then(scrapeAllScripts)
-    .then(inlineScriptToString)
-    .then(filterFor('document.getElementsByTagName(\'video\')'))
-    .then(thereCanBeOnlyOne)
-    .then(cutStartingFrom('eval(', 2))
-    .then(removeHiddenChars)
+// .then(inlineScriptToString)
+// .then(filterFor('document.getElementsByTagName(\'video\')'))
+// .then(thereCanBeOnlyOne)
+// .then(cutStartingFrom('eval(', 2))
+// .then(removeHiddenChars)
+  
