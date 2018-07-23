@@ -28,11 +28,23 @@ const scrapeAllScripts = $ =>
     })
     .get()
 
+const createScriptElements = scripts => ({
+  referenceScripts: scripts
+    .filter(script => script.sourceContainsVideo)
+    .map(script => `<script src="${script.source}"></script>`)
+    .join(''),
+  inlineScripts: scripts
+    .filter(script => script.dataContainsVideo)
+    .map(script => `<script>${script.data}</script>`)
+    .join('')
+})
+
 module.exports = (streamid = 138) =>
   fetch(`https://www.arconaitv.us/stream.php?id=${streamid}`)
     .then(extractData)
     .then(loadCheerio)
     .then(scrapeAllScripts)
+    .then(createScriptElements)
 // .then(inlineScriptToString)
 // .then(filterFor('document.getElementsByTagName(\'video\')'))
 // .then(thereCanBeOnlyOne)
