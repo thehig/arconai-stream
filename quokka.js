@@ -4,6 +4,37 @@ import fetchScript from './fetch-script';
 const PORT = 80
 var app = express()
 
+const outputVideoUrl = () => `
+<script>
+  var replaceVideo = function(url) {
+    var el = document.querySelector('body');
+
+    var newEl = document.createElement('a');
+    newEl.href = url;
+    newEl.innerHTML = url;
+
+    el.parentNode.replaceChild(newEl, el);
+  };
+
+  var searchForSource = setInterval(function() {
+    var elems = document.getElementsByTagName("source");
+    for (var i = 0; i < elems.length; i++) {
+      try {
+        var elem = elems[i];
+
+        if(elem.src) {
+          replaceVideo(elem.src)
+          clearInterval(searchForSource)
+          break;
+        }
+      } catch (e) {
+        /*no-op*/
+      }
+    }
+  }, 1000);
+</script>
+`
+
 const buildHtml = scripts => {
   const referenceScripts = scripts
     .filter(script => script.sourceContainsVideo)
@@ -30,6 +61,9 @@ const buildHtml = scripts => {
       <source id="stream_player_src" src="" type="application/x-mpegURL">
     </video> 
     ${inlineScripts}
+  </div>
+  <div class="video-source-output">
+    ${outputVideoUrl()}
   </div>
 </body>
 
