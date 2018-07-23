@@ -1,28 +1,24 @@
-const getStreamUrl = (checkInterval = 300) => `
+const getStreamUrl = (checkInterval = 300 /*ms*/) => `
 <script>
   // Every second
   var searchForSource = setInterval(function() {
     // Find all <source> elements
-    var elems = document.getElementsByTagName("source");
-    for (var i = 0; i < elems.length; i++) {
-      try {
-        var elem = elems[i];
-        // If the <source> element has a 'src' property
-        if(elem.src) {
-          // We're done here
-          clearInterval(searchForSource)
-          window.location = elem.src;
-          break;
-        }
-      } catch (e) {
-        /*no-op*/
+    try {
+      var sourceElement = document.querySelector('#stream_player_src');
+      // If the <source> element has a 'src' property
+      if(sourceElement.src) {
+        // We're done here
+        clearInterval(searchForSource)
+        window.location = sourceElement.src;
       }
+    } catch (e) {
+      /*no-op*/
     }
   }, ${checkInterval});
 </script>
 `
 
-const buildHtml = scripts => {
+module.exports = scripts => {
   const referenceScripts = scripts
     .filter(script => script.sourceContainsVideo)
     .map(script => `<script src="${script.source}"></script>`)
@@ -62,5 +58,3 @@ const buildHtml = scripts => {
 </html>
 `
 }
-
-module.exports = buildHtml
