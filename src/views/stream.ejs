@@ -23,17 +23,15 @@
   </div>
   <script>
       var searchForSource = setInterval(function() {
-        // Find all <source> elements
         try {
           var sourceElement = document.querySelector('#stream_player_src');
-          // If the <source> element has a 'src' property
           if(sourceElement.src) {
             // We're done here
             clearInterval(searchForSource)
             window.location = sourceElement.src;
           }
         } catch (e) {
-          /*no-op*/
+          // no-op
         }
       }, 300);
     </script>
