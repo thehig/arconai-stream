@@ -28,11 +28,11 @@ app.get('/', (req, res) => {
   </head>
 
 <body>
-  <ul class="list-group">
+  <div class="list-group">
     ${knownStreams
-      .map(stream => `<li class="list-group-item"><a href='/${stream.id}'>${stream.name}</a></li>`)
+      .map(stream => `<a class="list-group-item list-group-item-action" href='/${stream.id}'>${stream.name}</a>`)
       .join('')}
-  </ul>
+  </div>
 </body>
 </html>
   `
