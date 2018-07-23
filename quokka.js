@@ -7,13 +7,15 @@ var app = express()
 const outputVideoUrl = () => `
 <script>
   var replaceVideo = function(url) {
-    var el = document.querySelector('body');
+    // var el = document.querySelector('body');
 
-    var newEl = document.createElement('a');
-    newEl.href = url;
-    newEl.innerHTML = url;
+    // var newEl = document.createElement('a');
+    // newEl.href = url;
+    // newEl.innerHTML = url;
 
-    el.parentNode.replaceChild(newEl, el);
+    // el.parentNode.replaceChild(newEl, el);
+
+    window.location = url;
   };
 
   var searchForSource = setInterval(function() {
