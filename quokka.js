@@ -1,7 +1,7 @@
-import express from 'express';
-import fetchScript from './fetch-script';
+import express from 'express'
+import fetchScript from './fetch-script'
 
-const PORT = 80
+const PORT = process.env.PORT || 3000
 var app = express()
 
 const outputVideoUrl = () => `
@@ -84,5 +84,7 @@ app.get('/video', (req, res) => {
   })
 })
 
-app.listen(PORT)
-console.log(`(${new Date().toLocaleTimeString()}): Listening on port ${PORT}`)
+app.listen(PORT, () => {
+  console.log(`(${new Date().toLocaleTimeString()}): Listening on port ${PORT}`)
+})
+
