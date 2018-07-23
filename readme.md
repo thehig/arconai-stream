@@ -4,7 +4,7 @@ I was in bed recently, with an episode of Stargate streaming from an online serv
 
 To continue my Stargate watching without worrying about setting my bed aflame, I tried saving the stream URL manually, but it changes periodically.
 
-And then it happened again, so I wrote this. Stream safely! :dash::fire:
+And then it happened again, so I wrote [this](https://arconai-stream.herokuapp.com/). Stream safely! :dash::fire:
 
 ## How does it work
 
