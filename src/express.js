@@ -7,7 +7,13 @@ var app = express()
 
 const knownStreams = [
   { id: 138, name: 'Stargate' },
-  { id: 139, name: 'House' }
+  { id: 139, name: 'House' },
+  { id: 32, name: 'Community' },
+  { id: 70, name: 'Outer Limits' },
+  { id: 150, name: 'Rick & Morty' },
+  { id: 84, name: 'South Park' },
+  { id: 115, name: 'Supernatural' },
+  { id: 15, name: 'Last Airbender & Korra' },
 ]
 
 app.get('/', (req, res) => {
