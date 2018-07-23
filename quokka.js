@@ -71,6 +71,26 @@ const buildHtml = scripts => {
 `
 }
 
+app.get('/', (req, res) => {
+  const html = `
+    <html>
+    <body>
+      <ul>
+        <li><a href='/138'>Stargate</a></li>
+        <li><a href='/139'>House</a></li>
+      </ul>
+    </body>
+    </html>
+  `
+
+  res.writeHead(200, {
+    'Content-Type': 'text/html',
+    'Content-Length': html.length,
+    Expires: new Date().toUTCString()
+  })
+  res.end(html)
+});
+
 app.get('/:streamid', (req, res) => {
   fetchScript(req.params.streamid).then(scripts => {
     var html = buildHtml(scripts)
