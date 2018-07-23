@@ -8,7 +8,7 @@ const arc = function(p, a, c, k, e, d) {
   console.log(p, a, c, k, e, d)
 
   e = log(function(c) {
-    return '34'.toString(36)
+    return c.toString(36)
   })
 
   if (!''.replace(/^/, String)) {
