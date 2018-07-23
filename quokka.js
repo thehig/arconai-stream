@@ -71,8 +71,8 @@ const buildHtml = scripts => {
 `
 }
 
-app.get('/video', (req, res) => {
-  fetchScript().then(scripts => {
+app.get('/:streamid', (req, res) => {
+  fetchScript(req.params.streamid).then(scripts => {
     var html = buildHtml(scripts)
 
     res.writeHead(200, {

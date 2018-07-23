@@ -46,8 +46,8 @@ const cutStartingFrom = (startingFrom, trimLength = 0) => script =>
 
 const removeHiddenChars = input => input.replace(/\u200B/g, '').trim()
 
-module.exports = () =>
-  fetch('https://www.arconaitv.us/stream.php?id=138')
+module.exports = (streamid = 138) =>
+  fetch(`https://www.arconaitv.us/stream.php?id=${streamid}`)
     .then(extractData)
     .then(loadCheerio)
     .then(scrapeAllScripts)
