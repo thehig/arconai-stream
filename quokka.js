@@ -1,5 +1,5 @@
-import express from 'express'
-import fetchScript from './fetch-script'
+const express = require('express')
+const fetchScript = require('./fetch-script')
 
 const PORT = process.env.PORT || 3000
 var app = express()

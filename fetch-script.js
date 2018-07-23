@@ -1,5 +1,5 @@
-import axios from 'axios';
-import cheerio from 'cheerio';
+const axios = require('axios')
+const cheerio = require('cheerio')
 
 const fetch = url => axios.get(url)
 const extractData = response => {
@@ -46,7 +46,7 @@ const cutStartingFrom = (startingFrom, trimLength = 0) => script =>
 
 const removeHiddenChars = input => input.replace(/\u200B/g, '').trim()
 
-export default () =>
+module.exports = () =>
   fetch('https://www.arconaitv.us/stream.php?id=138')
     .then(extractData)
     .then(loadCheerio)
