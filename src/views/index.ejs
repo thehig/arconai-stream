@@ -10,7 +10,7 @@
 <body>
   <div class="list-group">
     <% streams.forEach(function(stream){ %>
-      <a class="text-center list-group-item list-group-item-action" href='<%= stream.id %>'><%= stream.name %></a>
+      <a class="text-center list-group-item list-group-item-action" href='<%= stream.id %>'><%= stream.name %> (<%= stream.clicks %>)</a>
     <% }); %>
   </div>
 

@@ -35,7 +35,8 @@ const getStreams = async () =>
       const row = rows[i]
       streams.push({
         id: row['stream-id'],
-        name: row['stream-name']
+        name: row['stream-name'],
+        clicks: row['stream-clicks']
       })
     }
 
