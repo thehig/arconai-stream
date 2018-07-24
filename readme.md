@@ -10,7 +10,8 @@ And then it happened again, so I wrote [this](https://arconai-stream.herokuapp.c
 
 ## How does it work
 
-Using an express server hosted on Heroku, the stream page is loaded and processed in your browser until the stream URL can be extracted and the browser is redirected
+An [express server](https://expressjs.com/) hosted on [Heroku](https://www.heroku.com/) scrapes the arconai stream page. The page is [parsed and stripped](https://github.com/cheeriojs/cheerio
+) of interesting scripts that **must** deobfusticate the video url (otherwise, how could anyone see the video), then [rebuilds the html](src/views/stream.ejs) and sends it to be :muscle: processed :muscle: in the browser until a stream URL can be extracted and the browser redirects
 
 ---
 
@@ -20,7 +21,7 @@ Using an express server hosted on Heroku, the stream page is loaded and processe
   - `/` - [index.ejs](src/views/index.ejs)
   - `/stream/:streamid` - [stream.ejs](src/views/stream.ejs)
 
-> Sidebar: I changed the stream URL to `/stream/:id` after getting db errors looking for a stream with the id `favicon.ico` :trollface:
+> I changed the URI to `/stream/:id` after db errors looking for a stream with the id `favicon.ico` :trollface:
 
 ## [db.js](src/db.js)
 
