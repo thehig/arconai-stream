@@ -27,7 +27,7 @@ const dbOperation = async processFunction => {
 
 const getStreams = async () =>
   await dbOperation(async client => {
-    const { rows } = await client.query('SELECT * FROM streams')
+    const { rows } = await client.query('SELECT * FROM streams ORDER BY id ASC')
 
     // Map results into compatible format
     const streams = []
