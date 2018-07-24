@@ -1,10 +1,16 @@
 const express = require('express')
+const favicon = require('serve-favicon')
+const path = require('path')
+
 const fetchScript = require('./fetch-script')
 const { getStreams, incrementStreamCount } = require('./db')
 
 const PORT = process.env.PORT || 3000
 
 var app = express()
+
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
+
 app.set('view engine', 'ejs')
 app.set('views', 'src/views')
 
