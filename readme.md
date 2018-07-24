@@ -20,6 +20,8 @@ Using an express server hosted on Heroku, the stream page is loaded and processe
   - `/` - [index.ejs](src/views/index.ejs)
   - `/stream/:streamid` - [stream.ejs](src/views/stream.ejs)
 
+> Sidebar: I changed the stream URL to `/stream/:id` after getting db errors looking for a stream with the id `favicon.ico` :trollface:
+
 ## [db.js](src/db.js)
 
 - Handles getting the list of streams from the db
@@ -38,11 +40,11 @@ Using an express server hosted on Heroku, the stream page is loaded and processe
 
 ## [stream.ejs](src/views/stream.ejs)
 
-- It takes the tagged scripts from above and creates a HTML page with *just* enough HTML to give the video somewhere to load into
-- It then injects the original script references (the ones that contained 'video') into the header and body
-- The original scripts go about deobfusticating the source URL and modifying the `<video>` element until its ready and it tries to start playing
-- It creates a `<script>` that will check the page periodically to see if there are any `<source>` elements that have a valid `src` property
-- When it finds one, it redirects the browser to the URL, which can be opened in a video player (eg: [bsplayer](https://www.bsplayer.com/bsplayer-english/products/bsplayer-android.html) or [chrome plugin](https://chrome.google.com/webstore/detail/play-hls-m3u8/ckblfoghkjhaclegefojbgllenffajdc?hl=en))
+- Takes the tagged scripts from above and creates a HTML page with *just* enough HTML to give the video somewhere to load into
+- Injects the script references (that contained 'video') into the header and body
+- The original scripts go about deobfusticating the source URL and modifying the `<video>` element until its ready and it tries to start playing, and then CORS kills it (*and rightly so* :raised_hands:)
+- An inline `<script>` checks the page periodically to see if the `<source>` element has a valid `src` attribute
+- When it's ready, the browser is redirected to the final URI ([.m3u8](https://en.wikipedia.org/wiki/M3U) playlist), which can be opened in a video player (eg: [bsplayer](https://www.bsplayer.com/bsplayer-english/products/bsplayer-android.html) or [chrome plugin](https://chrome.google.com/webstore/detail/play-hls-m3u8/ckblfoghkjhaclegefojbgllenffajdc?hl=en))
 
 ---
 
