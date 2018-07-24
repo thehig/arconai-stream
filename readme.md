@@ -18,7 +18,12 @@ Using an express server hosted on Heroku, the stream page is loaded and processe
 
 - Brings up an express server with routes
   - `/` - [index.ejs](src/views/index.ejs)
-  - `/:streamid` - [stream.ejs](src/views/stream.ejs)
+  - `/stream/:streamid` - [stream.ejs](src/views/stream.ejs)
+
+## [db.js](src/db.js)
+
+- Handles getting the list of streams from the db
+- Handles `+1`ing the route views
 
 ## [fetch-script.js](src/fetch-script.js)
 
