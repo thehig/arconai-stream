@@ -17,8 +17,8 @@ Using an express server hosted on Heroku, the stream page is loaded and processe
 ## [express.js](src/express.js)
 
 - Brings up an express server with routes
-  - `/` Shows a list of stream IDs that I've bothered to save
-  - `/:streamid` Process the stream with the given id. Doesn't have to be in the list already
+  - `/` - [index](#index.ejs)
+  - `/:streamid` - [stream](#stream.ejs)
 
 ## [fetch-script.js](src/fetch-script.js)
 
@@ -27,13 +27,17 @@ Using an express server hosted on Heroku, the stream page is loaded and processe
 - Extracts all the `<script>` elements
 - Tags any scripts where the source or content includes `video`
 
-## [show-stream.js](src/show-stream.js)
+## [index.ejs](src/views/index.ejs)
+
+ Shows a list of stream IDs that I've bothered to save with a *smidge* of Bootstrap to make it easy to use on mobile
+
+## [stream.ejs](src/views/stream.ejs)
 
 - It takes the tagged scripts from above and creates a HTML page with *just* enough HTML to give the video somewhere to load into
 - It then injects the original script references (the ones that contained 'video') into the header and body
 - The original scripts go about deobfusticating the source URL and modifying the `<video>` element until its ready and it tries to start playing
-- It creates a `<script>` that will check the page once per second to see if there are any `<source>` elements that have a valid `src` property
-- When it finds one, it redirects the browser to the URL, which can be opened in a video player (eg: [bsplayer](https://www.bsplayer.com/bsplayer-english/products/bsplayer-android.html))
+- It creates a `<script>` that will check the page periodically to see if there are any `<source>` elements that have a valid `src` property
+- When it finds one, it redirects the browser to the URL, which can be opened in a video player (eg: [bsplayer](https://www.bsplayer.com/bsplayer-english/products/bsplayer-android.html) or [chrome plugin](https://chrome.google.com/webstore/detail/play-hls-m3u8/ckblfoghkjhaclegefojbgllenffajdc?hl=en))
 
 ---
 
