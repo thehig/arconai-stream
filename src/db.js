@@ -11,7 +11,7 @@ const getStreams = async () => {
   let result = []
   try {
     const { rows } = await client.query(
-      'SELECT * FROM streams ORDER BY id ASC'
+      'SELECT * FROM streams ORDER BY "stream-clicks" DESC'
     )
 
     // Map results into compatible format
