@@ -1,10 +1,14 @@
 <html>
   <head>
+  <!-- Disable service worker until caching can be sorted out
     <script>
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('service-worker.js');
       }
     </script>
+    <link rel="manifest" href="/manifest.json">
+  -->
+
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -13,7 +17,6 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
 
     <meta name="theme-color" content="#db5945">
-    <link rel="manifest" href="/manifest.json">
 
     <title>Arconai Stream</title>
   </head>
