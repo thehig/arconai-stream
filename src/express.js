@@ -41,6 +41,8 @@ app.get('/stream/:streamid', (req, res) => {
     })
 })
 
+app.use('/service-worker.js', express.static(__dirname + '/static/service-worker.js'))
+
 app.listen(PORT, () => {
   console.log(
     `(${new Date().toLocaleTimeString()}): Listening on port ${PORT}`
