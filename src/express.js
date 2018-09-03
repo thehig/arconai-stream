@@ -42,6 +42,7 @@ app.get('/stream/:streamid', (req, res) => {
 })
 
 app.use('/service-worker.js', express.static(__dirname + '/static/service-worker.js'))
+app.use('/manifest.json', express.static(__dirname + '/static/manifest.json'))
 
 app.listen(PORT, () => {
   console.log(
