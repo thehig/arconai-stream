@@ -1,4 +1,4 @@
-const DEBUG = false
+const DEBUG = true
 
 const CACHE_BASE_NAME = 'ARCONAI-STREAM'
 const CACHE_TAG = '0001'
