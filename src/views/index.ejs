@@ -11,7 +11,7 @@
         var lastETag = localStorage.currentETag
         var isNew = lastETag !== message.eTag
 
-        if (isRefresh && isNew) {
+        if (isRefresh && lastETag && isNew) {
           localStorage.currentETag = message.eTag
 
           // Do this when the ETag is updated
