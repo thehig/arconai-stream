@@ -13,7 +13,9 @@
 </head>
 
 <body>
-  <div><h3>You will be redirected in a moment</h3></div>
+  <div>
+    <h3>You should be redirected in a moment</h3>
+  </div>
   <div class="video-container">
     <video id="stream_player" class="stream-player video-js vjs-default-skin vjs-16-9 vjs-big-play-centered" autoplay controls
       preload="none" width="640" height="264">
@@ -22,19 +24,34 @@
     <%- inlineScripts %>
   </div>
   <script>
-      var searchForSource = setInterval(function() {
-        try {
-          var sourceElement = document.querySelector('#stream_player_src');
-          if(sourceElement.src) {
-            // We're done here
-            clearInterval(searchForSource)
-            window.location = sourceElement.src;
-          }
-        } catch (e) {
-          // no-op
+    var count = 0, maxCount = 100, interval = 300;
+    var searchForSource = setInterval(function () {
+      try {
+        if (++count > maxCount) {
+          clearInterval(searchForSource);
+          alert('Unable to locate stream source within ~' + (maxCount * interval / 1000) + ' seconds');
+          return;
         }
-      }, 300);
-    </script>
+
+        // Get the videojs player
+        if (!videojs || !videojs.getAllPlayers) return;
+        var players = videojs.getAllPlayers();
+        if (!players || players.length === 0) return;
+        var player = players[0];
+
+        // Get the cache source
+        var source = player.cache_.src;
+        if (!source) return;
+
+        clearInterval(searchForSource)
+        console.log('Redirecting to', source);
+        window.location = source;
+
+      } catch (e) {
+        // no-op
+      }
+    }, interval);
+  </script>
 </body>
 
 </html>
