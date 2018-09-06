@@ -42,10 +42,13 @@
         // Get the cache source
         var source = player.cache_.src;
         if (!source) return;
+        
+        // BSPlayer couldn't open the plain 'src', I'm hoping this fixes that
+        var cleanSource = source.toString().trim();
 
         clearInterval(searchForSource)
-        console.log('Redirecting to', source);
-        window.location = source;
+        console.log('Redirecting to', cleanSource);
+        window.location = cleanSource;
 
       } catch (e) {
         // no-op
