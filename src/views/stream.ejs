@@ -15,16 +15,20 @@
 <body>
   <div>
     <h3>You should be redirected in a moment</h3>
+    <div id="targetUrl" />
   </div>
   <div class="video-container">
-    <video id="stream_player" class="stream-player video-js vjs-default-skin vjs-16-9 vjs-big-play-centered" autoplay controls
-      preload="none" width="640" height="264">
+    <video id="stream_player" class="stream-player video-js vjs-default-skin vjs-16-9 vjs-big-play-centered" autoplay
+      controls preload="none" width="640" height="264">
       <source id="stream_player_src" src="" type="application/x-mpegURL">
     </video>
     <%- inlineScripts %>
   </div>
   <script>
-    var count = 0, maxCount = 100, interval = 300;
+    var count = 0, maxCount = 100, interval = 300,
+      targetDiv = document.getElementById("targetUrl"),
+      newAnchorTag = document.createElement('a');
+
     var searchForSource = setInterval(function () {
       try {
         if (++count > maxCount) {
@@ -42,14 +46,18 @@
         // Get the cache source
         var source = player.cache_.src;
         if (!source) return;
-        
-        // BSPlayer couldn't open the plain 'src', I'm hoping this fixes that
-        var cleanSource = source.toString().trim();
 
-        clearInterval(searchForSource)
-        console.log('Redirecting to', cleanSource);
-        window.location = cleanSource;
+        // At this point we have the source, so stop looping
+        clearInterval(searchForSource);
 
+        // Add the newAnchorTag to the DOM with the source URL
+        //        https://stackoverflow.com/questions/42320019/creating-anchor-tags-dynamically-in-html-using-javascript
+        newAnchorTag.innerText = source;
+        newAnchorTag.setAttribute('href', source);
+        targetDiv.appendChild(newAnchorTag);
+
+        console.log('Redirecting to', source);
+        window.location.href = source;
       } catch (e) {
         // no-op
       }
