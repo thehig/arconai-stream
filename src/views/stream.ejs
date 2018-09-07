@@ -56,8 +56,10 @@
         newAnchorTag.setAttribute('href', source);
         targetDiv.appendChild(newAnchorTag);
 
-        console.log('Redirecting to', source);
-        window.open(source);
+        setTimeout(function () {
+          console.log('Redirecting to', source);
+          window.location.href = source;
+        }, 750);
       } catch (e) {
         // no-op
       }
