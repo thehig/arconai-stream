@@ -25,45 +25,56 @@
     <%- inlineScripts %>
   </div>
   <script>
-    var count = 0, maxCount = 100, interval = 300,
-      targetDiv = document.getElementById("targetUrl"),
-      newAnchorTag = document.createElement('a');
+    (function (doc) {
+      var count = 0, maxCount = 100, interval = 300,
+        targetDiv = document.getElementById("targetUrl"),
+        newAnchorTag = document.createElement('a')
+      stopRedirecting = !!document.getElementById("source-href");
 
-    var searchForSource = setInterval(function () {
-      try {
-        if (++count > maxCount) {
+      // *Try* not to rerun the reload trigger if the user has back-nav'd to this page
+      //    this gives the user a chance to either A) click the link or B) copy the URL
+      if (stopRedirecting) return;
+
+      searchForSource = setInterval(function () {
+        if (stopRedirecting) return;
+        try {
+          if (++count > maxCount) {
+            clearInterval(searchForSource);
+            alert('Unable to locate stream source within ~' + (maxCount * interval / 1000) + ' seconds');
+            return;
+          }
+
+          // Get the videojs player
+          if (!videojs || !videojs.getAllPlayers) return;
+          let players = videojs.getAllPlayers();
+          if (!players || players.length === 0) return;
+          let player = players[0];
+
+          // Get the cache source
+          let source = player.cache_.src;
+          if (!source) return;
+
+          // At this point we have the source, so stop looping
           clearInterval(searchForSource);
-          alert('Unable to locate stream source within ~' + (maxCount * interval / 1000) + ' seconds');
-          return;
+
+          setTimeout(function () {
+            if (stopRedirecting) return;
+
+            // Add the newAnchorTag to the DOM with the source URL
+            //        https://stackoverflow.com/questions/42320019/creating-anchor-tags-dynamically-in-html-using-javascript
+            newAnchorTag.innerText = source;
+            newAnchorTag.id = "source-href"
+            newAnchorTag.setAttribute('href', source);
+            targetDiv.appendChild(newAnchorTag);
+
+            console.log('Redirecting to', source);
+            window.location.href = source;
+          }, 350);
+        } catch (e) {
+          // no-op
         }
-
-        // Get the videojs player
-        if (!videojs || !videojs.getAllPlayers) return;
-        var players = videojs.getAllPlayers();
-        if (!players || players.length === 0) return;
-        var player = players[0];
-
-        // Get the cache source
-        var source = player.cache_.src;
-        if (!source) return;
-
-        // At this point we have the source, so stop looping
-        clearInterval(searchForSource);
-
-        // Add the newAnchorTag to the DOM with the source URL
-        //        https://stackoverflow.com/questions/42320019/creating-anchor-tags-dynamically-in-html-using-javascript
-        newAnchorTag.innerText = source;
-        newAnchorTag.setAttribute('href', source);
-        targetDiv.appendChild(newAnchorTag);
-
-        setTimeout(function () {
-          console.log('Redirecting to', source);
-          window.location.href = source;
-        }, 750);
-      } catch (e) {
-        // no-op
-      }
-    }, interval);
+      }, interval);
+    })(this);
   </script>
 </body>
 
