@@ -68,8 +68,8 @@
             targetDiv.appendChild(newAnchorTag);
 
             console.log('Redirecting to', source);
-            window.location.href = source;
-          }, 350);
+            window.location = source;
+          }, 750);
         } catch (e) {
           // no-op
         }
