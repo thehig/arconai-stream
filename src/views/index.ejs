@@ -6,7 +6,8 @@
       var shouldRefresh = true;
 
       // If the user attempts navigation, don't try and reload (which "eats" their navigation attempt)
-      window.on('beforeunload', event => {
+      window.addEventListener('beforeunload', event => {
+        console.log('Disabling autorefresh');
         shouldRefresh = false;
       });
 
