@@ -1,68 +1,89 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <script>
+      if ('serviceWorker' in navigator) {
+        var shouldRefresh = true
 
-<head>
-  <script>
-    if ('serviceWorker' in navigator) {
-      var shouldRefresh = true;
+        // If the user attempts navigation, don't try and reload (which "eats" their navigation attempt)
+        window.addEventListener('beforeunload', event => {
+          console.log('Disabling autorefresh')
+          shouldRefresh = false
+        })
 
-      // If the user attempts navigation, don't try and reload (which "eats" their navigation attempt)
-      window.addEventListener('beforeunload', event => {
-        console.log('Disabling autorefresh');
-        shouldRefresh = false;
-      });
+        // Register browser handler for etag (cache) changes
+        navigator.serviceWorker.onmessage = evt => {
+          var message = JSON.parse(evt.data)
 
-      // Register browser handler for etag (cache) changes
-      navigator.serviceWorker.onmessage = function (evt) {
-        var message = JSON.parse(evt.data)
+          var isRefresh = message.type === 'refresh'
+          var lastETag = localStorage.currentETag
+          var isNew = lastETag !== message.eTag
 
-        var isRefresh = message.type === 'refresh'
-        var lastETag = localStorage.currentETag
-        var isNew = lastETag !== message.eTag
+          if (isRefresh && lastETag && isNew && shouldRefresh) {
+            localStorage.currentETag = message.eTag
 
-        if (isRefresh && lastETag && isNew && shouldRefresh) {
-          localStorage.currentETag = message.eTag
-
-          // Do this when the ETag is updated
-          location.reload()
+            // Do this when the ETag is updated
+            location.reload()
+          }
         }
+
+        navigator.serviceWorker.register('service-worker.js')
       }
+    </script>
+    <link rel="manifest" href="/manifest.json" />
 
-      navigator.serviceWorker.register('service-worker.js');
-    }
-  </script>
-  <link rel="manifest" href="/manifest.json">
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
 
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css"
+      integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B"
+      crossorigin="anonymous"
+    />
 
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B"
-    crossorigin="anonymous">
+    <meta name="theme-color" content="#db5945" />
 
-  <meta name="theme-color" content="#db5945">
+    <title>Arconai Stream</title>
+  </head>
 
-  <title>Arconai Stream</title>
-</head>
-
-<body>
-  <div class="list-group">
-    <% streams.forEach(function(stream){ %>
-      <a class="text-center list-group-item list-group-item-action" href='stream/<%= stream.id %>'><%= stream.name %> <small><%= stream.clicks %> views</small></a>
+  <body>
+    <div class="list-group">
+      <% streams.forEach(function(stream){ %>
+      <a
+        class="text-center list-group-item list-group-item-action"
+        href="stream/<%= stream.id %>"
+        ><%= stream.name %> <small><%= stream.clicks %> views</small></a
+      >
       <% }); %>
-        <a class="text-center list-group-item list-group-item-action" href="https://github.com/thehig/arconai-stream"><small
-            class="text-muted">See how it's done</small></a>
-  </div>
+      <a
+        class="text-center list-group-item list-group-item-action"
+        href="https://github.com/thehig/arconai-stream"
+        ><small class="text-muted">See how it's done</small></a
+      >
+    </div>
 
-  <!-- Optional JavaScript -->
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-    crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-    crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em"
-    crossorigin="anonymous"></script>
-</body>
-
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+      integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js"
+      integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em"
+      crossorigin="anonymous"
+    ></script>
+  </body>
 </html>
