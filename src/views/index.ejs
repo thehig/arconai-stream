@@ -3,6 +3,13 @@
 <head>
   <script>
     if ('serviceWorker' in navigator) {
+      var shouldRefresh = true;
+
+      // If the user attempts navigation, don't try and reload (which "eats" their navigation attempt)
+      window.on('beforeunload', event => {
+        shouldRefresh = false;
+      });
+
       // Register browser handler for etag (cache) changes
       navigator.serviceWorker.onmessage = function (evt) {
         var message = JSON.parse(evt.data)
@@ -11,7 +18,7 @@
         var lastETag = localStorage.currentETag
         var isNew = lastETag !== message.eTag
 
-        if (isRefresh && lastETag && isNew) {
+        if (isRefresh && lastETag && isNew && shouldRefresh) {
           localStorage.currentETag = message.eTag
 
           // Do this when the ETag is updated
