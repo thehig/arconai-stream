@@ -205,7 +205,7 @@ function fromNetwork(request, timeout) {
  * Refresh any serviceworker connected client pages
  */
 function refresh(response) {
-  if (DEBUG) console.log('%c[<-][refresh]', styles.refresh, response.url)
+  if (DEBUG) console.log('%c[->][refresh]', styles.refresh, response.url)
 
   // Get all attached clients
   return self.clients.matchAll().then(clients =>

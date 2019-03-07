@@ -3,28 +3,35 @@
   <head>
     <script>
       if ('serviceWorker' in navigator) {
-        var shouldRefresh = true
+        var userWaiting = true
 
         // If the user attempts navigation, don't try and reload (which "eats" their navigation attempt)
         window.addEventListener('beforeunload', event => {
           console.log('Disabling autorefresh')
-          shouldRefresh = false
+          userWaiting = false
         })
 
         // Register browser handler for etag (cache) changes
         navigator.serviceWorker.onmessage = evt => {
           var message = JSON.parse(evt.data)
-
           var isRefresh = message.type === 'refresh'
           var lastETag = localStorage.currentETag
           var isNew = lastETag !== message.eTag
 
-          if (isRefresh && lastETag && isNew && shouldRefresh) {
-            localStorage.currentETag = message.eTag
+          var shouldRefresh = isRefresh && lastETag && isNew && userWaiting;
 
-            // Do this when the ETag is updated
-            location.reload()
-          }
+          console.log(
+            '%c[<-][refresh]',
+            'background: #EEE; color: #9d8319',
+            response.url,
+            shouldRefresh ? 'Refreshing...' : 'Ignoring...'
+          )
+
+          if(!shouldRefresh) return;
+
+          // Do this when the ETag is updated
+          localStorage.currentETag = message.eTag
+          location.reload()
         }
 
         navigator.serviceWorker.register('service-worker.js')
