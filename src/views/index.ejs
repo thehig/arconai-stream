@@ -18,12 +18,11 @@
           var lastETag = localStorage.currentETag
           var isNew = lastETag !== message.eTag
 
-          var shouldRefresh = isRefresh && lastETag && isNew && userWaiting
+          var shouldRefresh = isRefresh && isNew && userWaiting
           var reasons = []
 
           if (!shouldRefresh) {
             if (!isRefresh) reasons.push('Message.type != "refresh"')
-            if (!lastETag) reasons.push('No lastETag')
             if (!isNew) reasons.push('Repeated eTag ' + message.eTag)
             if (!userWaiting) reasons.push('User navigated')
           }
