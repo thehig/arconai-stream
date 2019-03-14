@@ -11,32 +11,34 @@
           userWaiting = false
         })
 
+        function logRefresh(...args) {
+          console.log(
+            '%c[<-][refresh]',
+            'background: #EEE; color: #9d8319',
+            ...args
+          )
+        }
+
         // Register browser handler for etag (cache) changes
         navigator.serviceWorker.onmessage = evt => {
           var message = JSON.parse(evt.data)
           var isRefresh = message.type === 'refresh'
+          if (!isRefresh) {
+            logRefresh('Ignoring (Message.type != "refresh")')
+            return
+          }
           var lastETag = localStorage.currentETag
           var isNew = lastETag !== message.eTag
-
-          var shouldRefresh = isRefresh && isNew && userWaiting
-          var reasons = []
-
-          if (!shouldRefresh) {
-            if (!isRefresh) reasons.push('Message.type != "refresh"')
-            if (!isNew) reasons.push('Repeated eTag ' + message.eTag)
-            if (!userWaiting) reasons.push('User navigated')
+          if (!isNew) {
+            logRefresh(`Ignoring (Repeated eTag ${message.eTag})`)
+            return
+          }
+          if (!userWaiting) {
+            logRefresh('Ignoring (User Navigated)')
+            return
           }
 
-          console.log(
-            '%c[<-][refresh]',
-            'background: #EEE; color: #9d8319',
-            shouldRefresh
-              ? 'Refreshing...'
-              : `Ignoring... ${reasons.length ? `(${reasons.join(', ')})` : ''}`
-          )
-
-          if (!shouldRefresh) return
-
+          logRefresh('Refreshing...')
           // Do this when the ETag is updated
           localStorage.currentETag = message.eTag
           location.reload()
