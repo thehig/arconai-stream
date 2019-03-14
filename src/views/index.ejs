@@ -22,9 +22,9 @@
           var reasons = []
 
           if (!shouldRefresh) {
-            console.log('isRefresh', isRefresh, 'lastETag', lastETag, 'isNew', isNew, 'userWaiting', userWaiting)
             if (!isRefresh) reasons.push('Message.type != "refresh"')
-            if (!isNew) reasons.push('Repeated eTag')
+            if (!lastETag) reasons.push('No lastETag')
+            if (!isNew) reasons.push('Repeated eTag ' + message.eTag)
             if (!userWaiting) reasons.push('User navigated')
           }
 
