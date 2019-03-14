@@ -18,15 +18,24 @@
           var lastETag = localStorage.currentETag
           var isNew = lastETag !== message.eTag
 
-          var shouldRefresh = isRefresh && lastETag && isNew && userWaiting;
+          var shouldRefresh = isRefresh && lastETag && isNew && userWaiting
+          var reasons = []
+
+          if (!shouldRefresh) {
+            if (!isRefresh) reasons.push('Message.type != "refresh"')
+            if (!isNew) reasons.push('Repeated eTag')
+            if (!userWaiting) reasons.push('User navigated')
+          }
 
           console.log(
             '%c[<-][refresh]',
             'background: #EEE; color: #9d8319',
-            shouldRefresh ? 'Refreshing...' : 'Ignoring...'
+            shouldRefresh
+              ? 'Refreshing...'
+              : `Ignoring... (${reasons.join(', ')})`
           )
 
-          if(!shouldRefresh) return;
+          if (!shouldRefresh) return
 
           // Do this when the ETag is updated
           localStorage.currentETag = message.eTag
