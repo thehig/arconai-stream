@@ -22,6 +22,7 @@
           var reasons = []
 
           if (!shouldRefresh) {
+            console.log('isRefresh', isRefresh, 'lastETag', lastETag, 'isNew', isNew, 'userWaiting', userWaiting)
             if (!isRefresh) reasons.push('Message.type != "refresh"')
             if (!isNew) reasons.push('Repeated eTag')
             if (!userWaiting) reasons.push('User navigated')
@@ -32,7 +33,7 @@
             'background: #EEE; color: #9d8319',
             shouldRefresh
               ? 'Refreshing...'
-              : `Ignoring... (${reasons.join(', ')})`
+              : `Ignoring... ${reasons.length ? `(${reasons.join(', ')})` : ''}`
           )
 
           if (!shouldRefresh) return
