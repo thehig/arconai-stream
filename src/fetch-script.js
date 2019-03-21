@@ -1,68 +1,41 @@
 const axios = require('axios')
 const cheerio = require('cheerio')
 
-const fetch = url => axios.get(url)
-const extractData = response => {
-  // console.log(response.data);
-  return response.data
-};
-const loadCheerio = html => cheerio.load(html)
+module.exports = (streamid = 138) =>
+  axios
+    .get(`https://www.arconaitv.us/stream.php?id=${streamid}`)
+    .then(response => response.data)
+    .then(html => {
+      const $ = cheerio.load(html) // Populate cheerio, our headless DOM
+      const scripts = $('script')
+        .map(function() {
+          // For each script (Don't use an arrow fn as it won't have 'this')
+          //  get the source and the data from the script
+          const source = this.attribs['src']
+          const data =
+            this.children[0] && this.children[0].data
+              ? this.children[0].data
+              : undefined
 
-const scrapeAllScripts = $ =>
-  $('script')
-    .map(function() {
-      // Don't use an arrow fn as it won't have 'this'
-      const source = this.attribs['src']
-      const data =
-        this.children[0] && this.children[0].data
-          ? this.children[0].data
-          : undefined
+          // Reformat the script to be injected (if it contains 'video')
+          return {
+            inlineScript:
+              data && data.indexOf('video') >= 0
+                ? `<script>${data}</script>`
+                : undefined,
+            referenceScript:
+              source && source.indexOf('video') >= 0
+                ? `<script src="${source}"></script>`
+                : undefined
+          }
+        })
+        .get()
 
+      // Join the scripts together
       return {
-        source,
-        data,
-
-        sourceContainsVideo: source && source.indexOf('video') >= 0,
-        dataContainsVideo: data && data.indexOf('video') >= 0
+        referenceScripts: scripts
+          .filter(script => script.referenceScript)
+          .join(''),
+        inlineScripts: scripts.filter(script => script.inlineScript).join('')
       }
     })
-    .get()
-
-const createScriptElements = scripts => ({
-  referenceScripts: scripts
-    .filter(script => script.sourceContainsVideo)
-    .map(script => `<script src="${script.source}"></script>`)
-    .join(''),
-  inlineScripts: scripts
-    .filter(script => script.dataContainsVideo)
-    .map(script => `<script>${script.data}</script>`)
-    .join('')
-})
-
-module.exports = (streamid = 138) =>
-  fetch(`https://www.arconaitv.us/stream.php?id=${streamid}`)
-    .then(extractData)
-    .then(loadCheerio)
-    .then(scrapeAllScripts)
-    .then(createScriptElements)
-// .then(inlineScriptToString)
-// .then(filterFor('document.getElementsByTagName(\'video\')'))
-// .then(thereCanBeOnlyOne)
-// .then(cutStartingFrom('eval(', 2))
-// .then(removeHiddenChars)
-
-// const inlineScriptToString = scripts =>
-//   scripts.map((index, value) => value).get()
-
-// const filterFor = desiredScriptContent => scripts =>
-//   scripts.filter(script => script.indexOf(desiredScriptContent) >= 0)
-
-// const thereCanBeOnlyOne = scripts => {
-//   if (scripts && scripts.length === 1) return scripts[0]
-//   throw new Error('Invalid scripts')
-// };
-
-// const cutStartingFrom = (startingFrom, trimLength = 0) => script =>
-//   script.substring(script.indexOf(startingFrom), script.length - trimLength)
-
-// const removeHiddenChars = input => input.replace(/\u200B/g, '').trim()
