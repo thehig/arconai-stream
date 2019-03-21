@@ -35,7 +35,11 @@ module.exports = (streamid = 138) =>
       return {
         referenceScripts: scripts
           .filter(script => script.referenceScript)
+          .map(script => script.referenceScript)
           .join(''),
-        inlineScripts: scripts.filter(script => script.inlineScript).join('')
+        inlineScripts: scripts
+          .filter(script => script.inlineScript)
+          .map(script => script.inlineScript)
+          .join('')
       }
     })
