@@ -49,7 +49,7 @@ An [express server](https://expressjs.com/) hosted on [Heroku](https://www.herok
 
 ## [service-worker.js](src/static/service-worker.js)
 
-Since all this is hosted on a Heroku instance, it exists "in the wild" on what I like to call a "💤sleepy server💤" (a server that is 'asleep' the first time you ping it, which then triggers it to 'wake up'). This 💤sleepy server💤 causes 20 - 30 seconds delay which I'd rather spend deciding whether to watch Stargate or, well, Stargate.
+Since all this is hosted on a Heroku instance, it exists "in the wild" on what I like to call a "💤sleepy server💤" (a server that is 'asleep' the first time you ping it, which then triggers it to 'wake up'). This sleepy server causes 20 - 30 seconds delay which I'd rather spend deciding whether to watch Stargate or, well, Stargate.
 
 So what is a service-worker? The service-worker is a piece of javascript that lives in the client browser in between it and the internet at large. This allows us to intercept requests and reply with cached data.
 
