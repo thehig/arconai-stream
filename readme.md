@@ -26,7 +26,7 @@ An [express server](https://expressjs.com/) hosted on [Heroku](https://www.herok
 ## [db.js](src/db.js)
 
 - Handles getting the list of streams from the db
-- Handles `+1`ing the route views
+- Handles adding `+1` to the `views` count
 
 ## [fetch-script.js](src/fetch-script.js)
 
@@ -46,6 +46,26 @@ An [express server](https://expressjs.com/) hosted on [Heroku](https://www.herok
 - The original scripts go about deobfusticating the source URL and modifying the `<video>` element until its ready and it tries to start playing, and then CORS kills it (*and rightly so* :raised_hands:)
 - An inline `<script>` checks the page periodically to see if the `<source>` element has a valid `src` attribute
 - When it's ready, the browser is redirected to the final URI ([.m3u8](https://en.wikipedia.org/wiki/M3U) playlist), which can be opened in a video player (eg: [bsplayer](https://www.bsplayer.com/bsplayer-english/products/bsplayer-android.html) or [chrome plugin](https://chrome.google.com/webstore/detail/play-hls-m3u8/ckblfoghkjhaclegefojbgllenffajdc?hl=en))
+
+## [service-worker.js](src/static/service-worker.js)
+
+Since all this is hosted on a Heroku instance, it exists "in the wild" on what I like to call a "💤sleepy server💤" (a server that is 'asleep' the first time you ping it, which then triggers it to 'wake up'). This 💤sleepy server💤 causes 20 - 30 seconds delay which I'd rather spend deciding whether to watch Stargate or, well, Stargate.
+
+So what is a service-worker? The service-worker is a piece of javascript that lives in the client browser in between it and the internet at large. This allows us to intercept requests and reply with cached data.
+
+So then we come to "the good stuff", the caching strategy. Wait, wait... it's not _that_ boring. I've probably put more effort into the service worker than I have the rest of the project combined, and I'm especially happy with how it has turned out. If you're interested, open then developer console and check out the 🌈color-coded🌈 events
+
+### Cache-Once
+
+Some assets (Bootstrap, jQuery) are cached when the service-worker is "installed" and then always served from the Cache. Ok that one _was_ boring.
+
+### Cache And Update
+
+When the browser tries to open the list of streams, the service-worker intercepts the request and returns the last cached version it had. Then in the background it sends a request off to the "actual" site, which can take 20 - 30 seconds to resolve.
+
+When the updated data is recieved by the service worker, it causes the page to refresh, showing the user the most up-to-date data as soon as is possible.
+
+During that 20 - 30 seconds the user can interact with the page as normal, deciding which stream to watch. If you click on a link, the automatic refresh is disabled, and you are taken to your stream ASAP.
 
 ---
 
