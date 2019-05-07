@@ -40,11 +40,18 @@ const getStreamName = async streamId => {
   let result
   try {
     const { rows } = await client.query(
-      'SELECT stream-name FROM streams WHERE stream-id=$1',
+      'SELECT "stream-name" FROM streams WHERE "stream-id"=$1',
       [streamId]
     )
 
+    if (rows.length !== 1) {
+      throw new Error(`Row length !== 1 for id ${streamId}`)
+    }
+
     result = rows[0]['stream-name']
+    if (!result) {
+      throw new Error(`Stream name not found for id ${streamId}`)
+    }
   } catch (err) {
     throw err
   } finally {

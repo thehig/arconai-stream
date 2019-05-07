@@ -44,10 +44,10 @@ app.get('/', async (req, res) => {
  */
 app.get('/stream/:streamid', (req, res) => {
   return incrementStreamCount(req.params.streamid)
-    .then(
+    .then(() =>
       Promise.all([
-        () => fetchScript(req.params.streamid),
-        () => getStreamName(req.params.streamid)
+        fetchScript(req.params.streamid),
+        getStreamName(req.params.streamid)
       ])
     )
     .then(([scripts, name]) => {
