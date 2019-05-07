@@ -51,7 +51,7 @@ app.get('/stream/:streamid', (req, res) => {
       ])
     )
     .then(([scripts, name]) => {
-      res.render('stream', { scripts, name })
+      res.render('stream', { ...scripts, name })
     })
     .catch(err => {
       console.error(err)
