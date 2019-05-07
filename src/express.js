@@ -3,7 +3,7 @@ const favicon = require('serve-favicon')
 const path = require('path')
 
 const fetchScript = require('./fetch-script')
-const { getStreams, incrementStreamCount } = require('./db')
+const { getStreams, incrementStreamCount, getStreamName } = require('./db')
 
 const PORT = process.env.PORT || 3000
 
@@ -17,7 +17,7 @@ app.set('views', 'src/views')
 
 /**
  * ROUTE `/`
- * 
+ *
  * Get the streams from the database (`getStreams`) and render them using the `index` view template
  */
 app.get('/', async (req, res) => {
@@ -34,7 +34,7 @@ app.get('/', async (req, res) => {
     })
 })
 
-/** 
+/**
  * ROUTE `/stream/:streamid`
  *
  * Take a stream ID from the URL parameter
@@ -44,9 +44,14 @@ app.get('/', async (req, res) => {
  */
 app.get('/stream/:streamid', (req, res) => {
   return incrementStreamCount(req.params.streamid)
-    .then(() => fetchScript(req.params.streamid))
-    .then(scripts => {
-      res.render('stream', scripts)
+    .then(
+      Promise.all([
+        () => fetchScript(req.params.streamid),
+        () => getStreamName(req.params.streamid)
+      ])
+    )
+    .then(([scripts, name]) => {
+      res.render('stream', { scripts, name })
     })
     .catch(err => {
       console.error(err)
@@ -56,12 +61,13 @@ app.get('/stream/:streamid', (req, res) => {
 })
 
 // Serve static files
-app.use('/service-worker.js', express.static(__dirname + '/static/service-worker.js'))
+app.use(
+  '/service-worker.js',
+  express.static(__dirname + '/static/service-worker.js')
+)
 app.use('/manifest.json', express.static(__dirname + '/static/manifest.json'))
 
 // Start server
 app.listen(PORT, () => {
-  console.log(
-    `(${new Date().toLocaleTimeString()}): Listening on port ${PORT}`
-  )
+  console.log(`(${new Date().toLocaleTimeString()}): Listening on port ${PORT}`)
 })

@@ -31,6 +31,28 @@ const getStreams = async () => {
   return result
 }
 
+const getStreamName = async streamId => {
+  if (!Number.isInteger(parseInt(streamId)))
+    throw new Error(`Stream ID must be an integer. Got "${streamId}"`)
+
+  // Connect to DB
+  const client = await pool.connect()
+  let result
+  try {
+    const { rows } = await client.query(
+      'SELECT stream-name FROM streams WHERE stream-id=$1',
+      [streamId]
+    )
+
+    result = rows[0]['stream-name']
+  } catch (err) {
+    throw err
+  } finally {
+    client.release()
+  }
+  return result
+}
+
 const incrementStreamCount = async streamId => {
   if (!Number.isInteger(parseInt(streamId)))
     throw new Error(`Stream ID must be an integer. Got "${streamId}"`)
@@ -52,5 +74,6 @@ const incrementStreamCount = async streamId => {
 
 module.exports = {
   getStreams,
+  getStreamName,
   incrementStreamCount
 }

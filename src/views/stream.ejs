@@ -3,13 +3,13 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Arconai Stream</title>
+  <title><%- name %> - Arconai Stream</title>
   <style>
     .video-container {
       display: none;
     }
   </style>
-  <%- referenceScripts %>
+  <%- scripts.referenceScripts %>
 </head>
 
 <body>
@@ -22,7 +22,7 @@
       controls preload="none" width="640" height="264">
       <source id="stream_player_src" src="" type="application/x-mpegURL">
     </video>
-    <%- inlineScripts %>
+    <%- scripts.inlineScripts %>
   </div>
   <script>
     (function (doc) {
