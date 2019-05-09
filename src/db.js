@@ -1,7 +1,8 @@
 const { Pool } = require('pg')
+const config = require('config')
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: config.get('DATABASE_URL'),
   ssl: true
 })
 

@@ -1,11 +1,10 @@
 const axios = require('axios')
 const cheerio = require('cheerio')
+const config = require('config')
 
 module.exports = async (streamid = 138) => {
   try {
-    const page = await axios.get(
-      `https://www.arconaitv.us/stream.php?id=${streamid}`
-    )
+    const page = await axios.get(config.get('STREAM_URL') + streamid)
 
     const $ = cheerio.load(page.data) // Populate cheerio, our headless DOM
     const scripts = $('script')
@@ -21,11 +20,11 @@ module.exports = async (streamid = 138) => {
         // Reformat the script to be injected (if it contains 'video')
         return {
           inlineScript:
-            data && data.indexOf('video') >= 0
+            data && data.indexOf(config.get('DATA_FILTER')) >= 0
               ? `<script>${data}</script>`
               : undefined,
           referenceScript:
-            source && source.indexOf('video') >= 0
+            source && source.indexOf(config.get('DATA_FILTER')) >= 0
               ? `<script src="${source}"></script>`
               : undefined
         }

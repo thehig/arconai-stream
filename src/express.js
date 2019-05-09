@@ -1,11 +1,12 @@
 const express = require('express')
 const favicon = require('serve-favicon')
 const path = require('path')
+const config = require('config')
 
 const fetchScript = require('./fetch-script')
 const { getStreams, incrementStreamCount, getStreamName } = require('./db')
 
-const PORT = process.env.PORT || 3000
+const PORT = config.get('EXPRESS_PORT');
 
 var app = express()
 
