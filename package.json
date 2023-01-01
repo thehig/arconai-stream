@@ -12,7 +12,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "cheerio": "^1.0.0-rc.3",
-    "config": "^3.1.0",
+    "config": "^3.3.8",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
     "pg": "^7.10.0",
